@@ -12,7 +12,8 @@
   (for [i (range ant-count)]
     {:x (rand-int width)
      :y (rand-int height)
-     :color (javafx.scene.paint.Color/BLACK)}))
+     :color (javafx.scene.paint.Color/BLACK)
+     :mad? false}))
 
 (defn draw-ants! [context]
   (.clearRect context 0 0 width height)
@@ -28,9 +29,22 @@
   (assoc ant
     :x (+ (random-step) (:x ant))
     :y (+ (random-step) (:y ant))))
+
+(defn aggravate-ant [ant] 
+  (let [crazies
+        (filter (fn [a]
+                  (and
+                       (< (Math/abs (- (:x ant) (:x a))) 20)
+                       (< (Math/abs (- (:y ant) (:y a))) 20)))
+          @ants)
+        crazy-count (count crazies)]
+    (assoc ant :color 
+      (if (> crazy-count 1)
+        javafx.scene.paint.Color/RED
+        javafx.scene.paint.Color/BLACK))))
     
 (defn move-ants []
-  (pmap move-ant @ants))
+  (doall (pmap aggravate-ant (pmap move-ant @ants))))
 
 (def last-timestamp (atom 0))
 
