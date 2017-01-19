@@ -11,13 +11,15 @@
 (defn create-ants []
   (for [i (range ant-count)]
     {:x (rand-int width)
-     :y (rand-int height)}))
+     :y (rand-int height)
+     :color (javafx.scene.paint.Color/BLACK)}))
 
 (defn draw-ants! [context]
   (.clearRect context 0 0 width height)
   (doseq [ant @ants]
-    (.setFill context javafx.scene.paint.Color/BLACK)
+    (.setFill context (:color ant))
     (.fillOval context (:x ant)(:y ant) 5 5)))
+  
 
 (defn random-step []
   (- (* 2 (rand)) 1))
@@ -58,3 +60,4 @@
 (defn -main []
   (javafx.application.Application/launch ants_clojure.core
     (into-array String [])))
+  
