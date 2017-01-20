@@ -30,7 +30,8 @@
     :x (+ (random-step) (:x ant))
     :y (+ (random-step) (:y ant))))
 
-(defn aggravate-ant [ant] 
+(defn aggravate-ant [ant]
+  (Thread/sleep 1)
   (let [crazies
         (filter (fn [a]
                   (and
@@ -44,7 +45,7 @@
         javafx.scene.paint.Color/BLACK))))
     
 (defn move-ants []
-  (doall (pmap aggravate-ant (pmap move-ant @ants))))
+  (doall (pmap aggravate-ant (pmap move-ant (deref ants)))))
 
 (def last-timestamp (atom 0))
 
