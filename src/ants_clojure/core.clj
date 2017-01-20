@@ -30,22 +30,36 @@
     :x (+ (random-step) (:x ant))
     :y (+ (random-step) (:y ant))))
 
-(defn aggravate-ant [ant]
+(defn antitude [ant]
   (Thread/sleep 1)
   (let [crazies
         (filter (fn [a]
                   (and
-                       (< (Math/abs (- (:x ant) (:x a))) 20)
-                       (< (Math/abs (- (:y ant) (:y a))) 20)))
+                       (< (Math/abs (- (:x ant) (:x a))) 17)
+                       (< (Math/abs (- (:y ant) (:y a))) 17)))
           @ants)
         crazy-count (count crazies)]
-    (assoc ant :color 
+    (assoc ant :color
       (if (> crazy-count 1)
-        javafx.scene.paint.Color/RED
+          javafx.scene.paint.Color/RED
         javafx.scene.paint.Color/BLACK))))
+
+(defn chill-ant [ant]
+  (Thread/sleep 2)
+  (let [chillant
+          (filter (fn [a]
+                    (and
+                         (< (Math/abs (- (:x ant) (:x a))) 43)
+                         (< (Math/abs (- (:y ant) (:y a))) 43)))
+            @ants)
+          chill-count (count chillant)]
+    (assoc ant :color 
+      (if (< chill-count 2)
+        javafx.scene.paint.Color/GREEN
+        (:color ant)))))
     
 (defn move-ants []
-  (doall (pmap aggravate-ant (pmap move-ant (deref ants)))))
+  (doall (pmap chill-ant (pmap antitude (pmap move-ant (deref ants))))))
 
 (def last-timestamp (atom 0))
 
