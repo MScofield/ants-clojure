@@ -8,6 +8,7 @@
 
 (def ants (atom []))
 
+;;go through all the ants each cycle 
 (defn create-ants []
   (for [i (range ant-count)]
     {:x (rand-int width)
@@ -15,21 +16,24 @@
      :color (javafx.scene.paint.Color/BLACK)
      :mad? false}))
 
+
 (defn draw-ants! [context]
   (.clearRect context 0 0 width height)
   (doseq [ant @ants]
     (.setFill context (:color ant))
     (.fillOval context (:x ant)(:y ant) 5 5)))
   
-
 (defn random-step []
   (- (* 2 (rand)) 1))
 
+
+;;randomly wiggle these crazy buggers
 (defn move-ant [ant]
   (assoc ant
     :x (+ (random-step) (:x ant))
     :y (+ (random-step) (:y ant))))
 
+;;turn the ants nearest each other red
 (defn antitude [ant]
   (Thread/sleep 1)
   (let [crazies
@@ -44,6 +48,7 @@
           javafx.scene.paint.Color/RED
         javafx.scene.paint.Color/BLACK))))
 
+;;turn the ants far from any other to green
 (defn chill-ant [ant]
   (Thread/sleep 2)
   (let [chillant
@@ -57,7 +62,8 @@
       (if (< chill-count 2)
         javafx.scene.paint.Color/GREEN
         (:color ant)))))
-    
+
+;;calling all the move and color functions
 (defn move-ants []
   (doall (pmap chill-ant (pmap antitude (pmap move-ant (deref ants))))))
 
@@ -68,6 +74,7 @@
         diff-seconds (/ diff 1000000000)]
     (int (/ 1 diff-seconds))))
 
+;;build console
 (defn -start [app stage]
   (let [root (javafx.fxml.FXMLLoader/load (io/resource "main.fxml"))
         scene (javafx.scene.Scene. root width height)
