@@ -1,6 +1,6 @@
 # ants-clojure
-
-A Clojure app to ... well, that part is up to you.
+There's a frame rate calculator running in the upper left hand corner.  
+Change how processes are threaded to see the effect on frame-rate.
 
 ## Usage
 
